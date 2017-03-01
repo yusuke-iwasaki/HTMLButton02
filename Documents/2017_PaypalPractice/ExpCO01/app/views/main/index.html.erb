@@ -1,0 +1,44 @@
+<div id="paypal-button"></div>
+
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+<script>
+    paypal.Button.render({
+    
+        env: 'sandbox', // Specify 'sandbox' for the test environment
+
+        client: {
+            sandbox:    'AbGnR_gI2boNelYgRueGP5XHWNoeEJnwW3PN4aeeFw1lOn8uT5sGLMhCjC75-ClJc6bF-OU-h-FJSkli',
+            production: 'AbGnR_gI2boNelYgRueGP5XHWNoeEJnwW3PN4aeeFw1lOn8uT5sGLMhCjC75-ClJc6bF-OU-h-FJSkli'
+        },
+
+        payment: function() {
+            // Set up the payment here, when the buyer clicks on the button
+
+            var env    = this.props.env;
+            var client = this.props.client;
+        
+            return paypal.rest.payment.create(env, client, {
+                transactions: [
+                    {
+                        amount: { total: '100', currency: 'JPY' }
+                    }
+                ]
+            });
+        },
+
+        commit: true, // Optional: show a 'Pay Now' button in the checkout flow
+
+        onAuthorize: function(data, actions) {
+            // Execute the payment here, when the buyer approves the transaction
+
+            // Optional: display a confirmation page here
+        
+            return actions.payment.execute().then(function() {
+                // Show a success page to the buyer
+            });
+
+       }
+            
+    }, '#paypal-button');
+</script>
